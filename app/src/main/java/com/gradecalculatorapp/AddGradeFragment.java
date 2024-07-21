@@ -18,13 +18,13 @@ public class AddGradeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_class_history, container, false);
+        View view = inflater.inflate(R.layout.fragment_course_grade, container, false);
 
         EditText categoryName = view.findViewById(R.id.category_name);
         EditText grade = view.findViewById(R.id.grade);
         EditText weight = view.findViewById(R.id.weight);
         Button addGradeButton = view.findViewById(R.id.add_grade_button);
-        TextView weightedGrade = view.findViewById(R.id.weighted_grade);
+        TextView weightedGrade = view.findViewById(R.id.total_weighted_grade);
 
         addGradeButton.setOnClickListener(v -> {
             Toast.makeText(getActivity(), "Testing AddGradeFragment", Toast.LENGTH_SHORT).show();

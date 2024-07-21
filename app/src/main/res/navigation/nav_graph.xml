@@ -1,18 +1,50 @@
-<?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    app:startDestination="@id/navigation_calculate">
+    app:startDestination="@id/navigation_home">
 
     <fragment
-        android:id="@+id/navigation_calculate"
-        android:name="com.gradecalculatorapp.AddClassFragment"
-        android:label="@string/title_home"
-        tools:layout="@layout/fragment_course_grade" />
+        android:id="@+id/navigation_home"
+        android:name="com.gradecalculatorapp.NavHomeFragment"
+        android:label="Home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_home_to_addClass"
+            app:destination="@id/navigation_addClass" />
+    </fragment>
 
     <fragment
-        android:id="@+id/navigation_history"
+        android:id="@+id/navigation_addClass"
+        android:name="com.gradecalculatorapp.AddCourseFragment"
+        android:label="Add Class"
+        tools:layout="@layout/fragment_course_grade">
+        <action
+            android:id="@+id/action_addClass_to_addGrade"
+            app:destination="@id/navigation_addGrade" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_addGrade"
         android:name="com.gradecalculatorapp.AddGradeFragment"
-        android:label="@string/title_delete"
-        tools:layout="@layout/fragment_class_history" />
+        android:label="Add Grade"
+        tools:layout="@layout/fragment_course_grade">
+        <action
+            android:id="@+id/action_addGrade_to_home"
+            app:destination="@id/navigation_home" />
+        <action
+            android:id="@+id/action_addGrade_to_deleteGrade"
+            app:destination="@id/navigation_deleteGrade" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_deleteClass"
+        android:name="com.gradecalculatorapp.DeleteCourseFragment"
+        android:label="Delete Class"
+        tools:layout="@layout/fragment_delete_class" />
+
+    <fragment
+        android:id="@+id/navigation_deleteGrade"
+        android:name="com.gradecalculatorapp.DeleteGradeFragment"
+        android:label="Delete Grade"
+        tools:layout="@layout/fragment_delete_grade" />
 </navigation>

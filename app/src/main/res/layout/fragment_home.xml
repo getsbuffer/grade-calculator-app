@@ -5,40 +5,33 @@
     android:padding="16dp">
 
     <EditText
-        android:id="@+id/category_name"
+        android:id="@+id/course_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Category Name" />
+        android:hint="Course Name" />
 
     <EditText
-        android:id="@+id/grade"
+        android:id="@+id/credit_hours"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Grade"
-        android:inputType="numberDecimal" />
-
-    <EditText
-        android:id="@+id/weight"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Weight"
-        android:inputType="numberDecimal" />
+        android:hint="Credit Hours"
+        android:inputType="number" />
 
     <Button
-        android:id="@+id/add_grade_button"
+        android:id="@+id/add_course_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Add" />
 
     <TextView
-        android:id="@+id/grade_list"
+        android:id="@+id/course_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Grades will be listed here" />
+        android:text="Courses will be listed here" />
 
     <TextView
-        android:id="@+id/total_weighted_grade"
+        android:id="@+id/total_gpa"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Total Weighted Grade: 0.0" />
+        android:text="Total GPA: 0.0" />
 </LinearLayout>
