@@ -10,10 +10,10 @@ import android.view.ViewGroup;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link NavigateHomeFragment#newInstance} factory method to
+ * Use the {@link NavHomeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class NavigateHomeFragment extends Fragment {
+public class NavHomeFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -24,7 +24,7 @@ public class NavigateHomeFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public NavigateHomeFragment() {
+    public NavHomeFragment() {
         // Required empty public constructor
     }
 
@@ -37,8 +37,8 @@ public class NavigateHomeFragment extends Fragment {
      * @return A new instance of fragment CourseGrade.
      */
     // TODO: Rename and change types and number of parameters
-    public static NavigateHomeFragment newInstance(String param1, String param2) {
-        NavigateHomeFragment fragment = new NavigateHomeFragment();
+    public static NavHomeFragment newInstance(String param1, String param2) {
+        NavHomeFragment fragment = new NavHomeFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);

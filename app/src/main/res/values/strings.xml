@@ -8,4 +8,8 @@
     <string name="add">Add</string>
     <string name="credit_hours">Credit Hours:</string>
     <string name="current_class">Class:</string>
+    <string name="category">Category</string>
+    <string name="grade">Grade</string>
+    <string name="weight">Weight</string>
+    <string name="weighted_grade_0">Weighted Grade: 0</string>
 </resources>

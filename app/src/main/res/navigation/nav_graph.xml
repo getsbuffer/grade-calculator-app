@@ -1,20 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/nav_graph"
     xmlns:tools="http://schemas.android.com/tools"
-    app:startDestination="@+id/navigation_calculate">
+    app:startDestination="@id/navigation_calculate">
 
     <fragment
         android:id="@+id/navigation_calculate"
-        android:name="com.gradecalculatorapp.NavigateHomeFragment"
+        android:name="com.gradecalculatorapp.AddClassFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_course_grade" />
 
     <fragment
         android:id="@+id/navigation_history"
-        android:name="com.gradecalculatorapp.DeleteFragment"
+        android:name="com.gradecalculatorapp.AddGradeFragment"
         android:label="@string/title_delete"
         tools:layout="@layout/fragment_class_history" />
-
 </navigation>

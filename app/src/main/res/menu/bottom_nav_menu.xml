@@ -9,5 +9,4 @@
         android:id="@+id/navigation_history"
         android:icon="@drawable/delete_icon"
         android:title="@string/title_delete" />
-
 </menu>
