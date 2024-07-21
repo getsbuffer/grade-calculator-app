@@ -1,15 +1,10 @@
 package com.gradecalculatorapp;
 
 import android.os.Bundle;
-
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
-
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -26,5 +21,21 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = navHostFragment.getNavController();
 
         NavigationUI.setupWithNavController(navView, navController);
+
+        navView.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+            if (itemId == R.id.navigation_home) {
+                navController.navigate(R.id.navigation_home);
+                return true;
+            } else if (itemId == R.id.navigation_delete) {
+                if (navController.getCurrentDestination().getId() == R.id.navigation_addClass) {
+                    navController.navigate(R.id.navigation_deleteClass);
+                } else if (navController.getCurrentDestination().getId() == R.id.navigation_addGrade) {
+                    navController.navigate(R.id.navigation_deleteGrade);
+                }
+                return true;
+            }
+            return false;
+        });
     }
 }

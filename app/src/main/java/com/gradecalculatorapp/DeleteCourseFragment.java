@@ -1,4 +1,6 @@
 package com.gradecalculatorapp;
 
-public class DeleteCourseFragment {
+import androidx.fragment.app.Fragment;
+
+public class DeleteCourseFragment extends Fragment {
 }

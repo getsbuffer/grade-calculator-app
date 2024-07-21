@@ -40,7 +40,7 @@
         android:id="@+id/navigation_deleteClass"
         android:name="com.gradecalculatorapp.DeleteCourseFragment"
         android:label="Delete Class"
-        tools:layout="@layout/fragment_delete_class" />
+        tools:layout="@layout/fragment_delete_course" />
 
     <fragment
         android:id="@+id/navigation_deleteGrade"
