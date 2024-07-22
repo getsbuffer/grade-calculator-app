@@ -28,11 +28,7 @@ public class MainActivity extends AppCompatActivity {
                 navController.navigate(R.id.navigation_home);
                 return true;
             } else if (itemId == R.id.navigation_delete) {
-                if (navController.getCurrentDestination().getId() == R.id.navigation_addClass) {
-                    navController.navigate(R.id.navigation_deleteClass);
-                } else if (navController.getCurrentDestination().getId() == R.id.navigation_addGrade) {
-                    navController.navigate(R.id.navigation_deleteGrade);
-                }
+                navController.navigate(R.id.navigation_delete);
                 return true;
             }
             return false;

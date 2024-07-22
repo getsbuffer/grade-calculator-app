@@ -5,34 +5,39 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import java.util.HashMap;
+import java.util.Map;
 
 public class NavHomeFragment extends Fragment {
 
     private static final int ADD_GRADE_REQUEST_CODE = 1;
+    private static final int DELETE_REQUEST_CODE = 2;
+    private static final String TAG = "NavHomeFragment";
     private double totalGradePoints = 0.0;
     private int totalCreditHours = 0;
+    private Map<String, Course> courses = new HashMap<>();
 
     public NavHomeFragment() {
-        // Required empty public constructor
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         EditText courseName = view.findViewById(R.id.course_name);
         EditText creditHours = view.findViewById(R.id.credit_hours);
         Button addCourseButton = view.findViewById(R.id.add_course_button);
-        TextView courseList = view.findViewById(R.id.course_list);
+        LinearLayout courseListLayout = view.findViewById(R.id.course_list_layout);
         TextView totalGPAText = view.findViewById(R.id.total_gpa);
 
         addCourseButton.setOnClickListener(v -> {
@@ -60,37 +65,54 @@ public class NavHomeFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == ADD_GRADE_REQUEST_CODE && resultCode == AppCompatActivity.RESULT_OK) {
-            if (data != null) {
+        if (resultCode == AppCompatActivity.RESULT_OK && data != null) {
+            Log.d(TAG, "onActivityResult: Received result");
+            if (requestCode == ADD_GRADE_REQUEST_CODE) {
                 String courseNameInput = data.getStringExtra("courseName");
                 int creditHoursValue = data.getIntExtra("creditHours", 0);
                 double finalGrade = data.getDoubleExtra("finalGrade", 0.0);
 
-                totalCreditHours += creditHoursValue;
-                double gradePoint = calculateGradePoint(finalGrade);
-                totalGradePoints += gradePoint * creditHoursValue;
+                Log.d(TAG, "Adding course: " + courseNameInput + " with credit hours: " + creditHoursValue + " and final grade: " + finalGrade);
 
-                double totalGPA = totalGradePoints / totalCreditHours;
+                Course course = new Course(courseNameInput, creditHoursValue, finalGrade);
+                courses.put(courseNameInput, course);
 
-                TextView courseList = getView().findViewById(R.id.course_list);
-                TextView totalGPAText = getView().findViewById(R.id.total_gpa);
-                courseList.append("\n" + courseNameInput + " - " + finalGrade + " (" + creditHoursValue + " credit hours)");
-                totalGPAText.setText("Total GPA: " + totalGPA);
+                updateCourseList();
+                updateGPA();
             }
+        } else {
+            Log.d(TAG, "Result code not OK or data is null");
         }
     }
 
-    private double calculateGradePoint(double finalGrade) {
-        if (finalGrade >= 90) {
-            return 4.0;
-        } else if (finalGrade >= 80) {
-            return 3.0;
-        } else if (finalGrade >= 70) {
-            return 2.0;
-        } else if (finalGrade >= 60) {
-            return 1.0;
-        } else {
-            return 0.0;
+    private void updateCourseList() {
+        LinearLayout courseListLayout = getView().findViewById(R.id.course_list_layout);
+        courseListLayout.removeAllViews();
+        for (Course course : courses.values()) {
+            View courseItemView = LayoutInflater.from(getContext()).inflate(R.layout.course_item, courseListLayout, false);
+            TextView courseItemText = courseItemView.findViewById(R.id.course_item_text);
+            Button editButton = courseItemView.findViewById(R.id.edit_button);
+            courseItemText.setText(course.getName() + " - " + course.getFinalGrade() + " (" + course.getCreditHours() + " credit hours)");
+
+            editButton.setOnClickListener(v -> {
+                Toast.makeText(getActivity(), "Edit functionality is not available right now.", Toast.LENGTH_SHORT).show();
+            });
+
+            courseListLayout.addView(courseItemView);
         }
+    }
+
+    private void updateGPA() {
+        totalGradePoints = 0.0;
+        totalCreditHours = 0;
+        for (Course course : courses.values()) {
+            totalCreditHours += course.getCreditHours();
+            totalGradePoints += course.getFinalGrade() * course.getCreditHours();
+        }
+
+        double totalGPA = totalCreditHours == 0 ? 0 : totalGradePoints / totalCreditHours;
+
+        TextView totalGPAText = getView().findViewById(R.id.total_gpa);
+        totalGPAText.setText("Total GPA: " + totalGPA);
     }
 }

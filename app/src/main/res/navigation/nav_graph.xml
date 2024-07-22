@@ -34,14 +34,8 @@
     </fragment>
 
     <fragment
-        android:id="@+id/navigation_deleteClass"
-        android:name="com.gradecalculatorapp.DeleteCourseFragment"
-        android:label="Delete Class"
-        tools:layout="@layout/fragment_delete_course" />
-
-    <fragment
-        android:id="@+id/navigation_deleteGrade"
-        android:name="com.gradecalculatorapp.DeleteGradeFragment"
-        android:label="Delete Grade"
-        tools:layout="@layout/fragment_delete_grade" />
+        android:id="@+id/navigation_delete"
+        android:name="com.gradecalculatorapp.DeleteFragment"
+        android:label="Delete"
+        tools:layout="@layout/fragment_delete" />
 </navigation>
