@@ -8,37 +8,43 @@
         android:id="@+id/category_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Category Name" />
+        android:hint="@string/category_name" />
 
     <EditText
         android:id="@+id/grade"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Grade"
+        android:hint="@string/grade"
         android:inputType="numberDecimal" />
 
     <EditText
         android:id="@+id/weight"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Weight"
+        android:hint="@string/weight"
         android:inputType="numberDecimal" />
 
     <Button
         android:id="@+id/add_grade_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add" />
+        android:text="@string/add" />
 
     <TextView
         android:id="@+id/grade_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Grades will be listed here" />
+        android:text="@string/grades_will_be_listed_here" />
 
     <TextView
         android:id="@+id/total_weighted_grade"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Total Weighted Grade: 0.0" />
+        android:text="@string/total_weighted_grade_0_0" />
+
+    <Button
+        android:id="@+id/done_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/done" />
 </LinearLayout>

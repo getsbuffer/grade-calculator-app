@@ -31,9 +31,6 @@
         <action
             android:id="@+id/action_addGrade_to_home"
             app:destination="@id/navigation_home" />
-        <action
-            android:id="@+id/action_addGrade_to_deleteGrade"
-            app:destination="@id/navigation_deleteGrade" />
     </fragment>
 
     <fragment

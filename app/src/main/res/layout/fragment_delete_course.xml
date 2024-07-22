@@ -8,11 +8,11 @@
         android:id="@+id/delete_class_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Class Name to Delete" />
+        android:hint="@string/class_name_to_delete" />
 
     <Button
         android:id="@+id/delete_class_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Delete Class" />
+        android:text="@string/delete_class" />
 </LinearLayout>

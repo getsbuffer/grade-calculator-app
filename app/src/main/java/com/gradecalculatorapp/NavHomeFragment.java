@@ -1,6 +1,9 @@
 package com.gradecalculatorapp;
 
+import android.content.Intent;
 import android.os.Bundle;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -14,19 +17,25 @@ import android.widget.Toast;
 
 public class NavHomeFragment extends Fragment {
 
+    private static final int ADD_GRADE_REQUEST_CODE = 1;
+    private double totalGPA = 0.0;
+    private int totalCreditHours = 0;
+
     public NavHomeFragment() {
+        // Required empty public constructor
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         EditText courseName = view.findViewById(R.id.course_name);
         EditText creditHours = view.findViewById(R.id.credit_hours);
         Button addCourseButton = view.findViewById(R.id.add_course_button);
         TextView courseList = view.findViewById(R.id.course_list);
-        TextView totalGPA = view.findViewById(R.id.total_gpa);
+        TextView totalGPAText = view.findViewById(R.id.total_gpa);
 
         addCourseButton.setOnClickListener(v -> {
             String courseNameInput = courseName.getText().toString();
@@ -35,10 +44,10 @@ public class NavHomeFragment extends Fragment {
             if (!courseNameInput.isEmpty() && !creditHoursInput.isEmpty()) {
                 try {
                     int creditHoursValue = Integer.parseInt(creditHoursInput);
-                    courseList.append("\n" + courseNameInput + " (" + creditHoursValue + " credit hours)");
-                    // Navigate to AddGradeFragment
-                    NavController navController = Navigation.findNavController(view);
-                    navController.navigate(R.id.action_home_to_addClass);
+                    Intent intent = new Intent(getActivity(), AddGradeActivity.class);
+                    intent.putExtra("courseName", courseNameInput);
+                    intent.putExtra("creditHours", creditHoursValue);
+                    startActivityForResult(intent, ADD_GRADE_REQUEST_CODE);
                 } catch (NumberFormatException e) {
                     Toast.makeText(getActivity(), "Please enter valid credit hours", Toast.LENGTH_SHORT).show();
                 }
@@ -48,5 +57,25 @@ public class NavHomeFragment extends Fragment {
         });
 
         return view;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == ADD_GRADE_REQUEST_CODE && resultCode == AppCompatActivity.RESULT_OK) {
+            if (data != null) {
+                String courseNameInput = data.getStringExtra("courseName");
+                int creditHoursValue = data.getIntExtra("creditHours", 0);
+                double finalGrade = data.getDoubleExtra("finalGrade", 0.0);
+
+                totalCreditHours += creditHoursValue;
+                totalGPA = (totalGPA * (totalCreditHours - creditHoursValue) + finalGrade * creditHoursValue) / totalCreditHours;
+
+                TextView courseList = getView().findViewById(R.id.course_list);
+                TextView totalGPAText = getView().findViewById(R.id.total_gpa);
+                courseList.append("\n" + courseNameInput + " - " + finalGrade + " (" + creditHoursValue + " credit hours)");
+                totalGPAText.setText("Total GPA: " + totalGPA);
+            }
+        }
     }
 }
