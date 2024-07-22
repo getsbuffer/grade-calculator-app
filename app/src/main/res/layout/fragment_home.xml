@@ -17,11 +17,16 @@
         android:hint="@string/credit_hours"
         android:inputType="number" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="end">
     <Button
         android:id="@+id/add_course_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/add" />
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/course_list_layout"

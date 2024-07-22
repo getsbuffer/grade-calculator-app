@@ -2,8 +2,7 @@ package com.gradecalculatorapp;
 
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +19,7 @@ public class AddCourseFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_course_grade, container, false);
+        View view = inflater.inflate(R.layout.fragment_add_grade, container, false);
 
         EditText categoryName = view.findViewById(R.id.category_name);
         EditText grade = view.findViewById(R.id.grade);

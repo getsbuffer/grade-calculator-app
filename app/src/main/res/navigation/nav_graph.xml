@@ -17,7 +17,7 @@
         android:id="@+id/navigation_addClass"
         android:name="com.gradecalculatorapp.AddCourseFragment"
         android:label="Add Class"
-        tools:layout="@layout/fragment_course_grade">
+        tools:layout="@layout/fragment_add_grade">
         <action
             android:id="@+id/action_addClass_to_addGrade"
             app:destination="@id/navigation_addGrade" />
@@ -27,7 +27,7 @@
         android:id="@+id/navigation_addGrade"
         android:name="com.gradecalculatorapp.AddGradeFragment"
         android:label="Add Grade"
-        tools:layout="@layout/fragment_course_grade">
+        tools:layout="@layout/fragment_add_grade">
         <action
             android:id="@+id/action_addGrade_to_home"
             app:destination="@id/navigation_home" />

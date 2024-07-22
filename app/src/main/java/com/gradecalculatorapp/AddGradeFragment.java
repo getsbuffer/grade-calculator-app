@@ -25,13 +25,13 @@ public class AddGradeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_course_grade, container, false);
+        View view = inflater.inflate(R.layout.fragment_add_grade, container, false);
 
         EditText categoryName = view.findViewById(R.id.category_name);
         EditText numericalGrade = view.findViewById(R.id.grade);
         EditText weight = view.findViewById(R.id.weight);
         Button addGradeButton = view.findViewById(R.id.add_grade_button);
-        TextView gradeList = view.findViewById(R.id.grade_list);
+        TextView gradeList = view.findViewById(R.id .grade_list);
         TextView totalWeightedGradeText = view.findViewById(R.id.total_weighted_grade);
         Button doneButton = view.findViewById(R.id.done_button);
 
