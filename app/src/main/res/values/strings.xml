@@ -9,4 +9,5 @@
     <string name="done">Done</string>
     <string name="class_name_to_delete">Class Name to Delete</string>
     <string name="delete_class">Delete Class</string>
+    <string name="numerical_grade">Numerical Grade</string>
 </resources>

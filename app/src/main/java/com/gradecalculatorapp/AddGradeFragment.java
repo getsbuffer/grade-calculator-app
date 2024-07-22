@@ -28,7 +28,7 @@ public class AddGradeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_course_grade, container, false);
 
         EditText categoryName = view.findViewById(R.id.category_name);
-        EditText grade = view.findViewById(R.id.grade);
+        EditText numericalGrade = view.findViewById(R.id.grade);
         EditText weight = view.findViewById(R.id.weight);
         Button addGradeButton = view.findViewById(R.id.add_grade_button);
         TextView gradeList = view.findViewById(R.id.grade_list);
@@ -37,15 +37,17 @@ public class AddGradeFragment extends Fragment {
 
         addGradeButton.setOnClickListener(v -> {
             String categoryNameInput = categoryName.getText().toString();
-            String gradeInput = grade.getText().toString();
+            String numericalGradeInput = numericalGrade.getText().toString();
             String weightInput = weight.getText().toString();
 
-            if (!categoryNameInput.isEmpty() && !gradeInput.isEmpty() && !weightInput.isEmpty()) {
+            if (!categoryNameInput.isEmpty() && !numericalGradeInput.isEmpty() && !weightInput.isEmpty()) {
                 try {
-                    double gradeValue = Double.parseDouble(gradeInput);
+                    double gradeValue = Double.parseDouble(numericalGradeInput);
                     double weightValue = Double.parseDouble(weightInput);
-                    // Add grade to list (here you would normally update a list and recalculate weighted grade)
+
+                    // Add grade to list
                     gradeList.append("\n" + categoryNameInput + ": " + gradeValue + " (" + weightValue + "%)");
+
                     // Calculate new total weighted grade (this is simplified for demonstration)
                     totalWeightedGrade += gradeValue * (weightValue / 100);
                     totalWeightedGradeText.setText("Total Weighted Grade: " + totalWeightedGrade);

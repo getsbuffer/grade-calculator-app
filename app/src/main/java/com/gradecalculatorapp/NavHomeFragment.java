@@ -5,8 +5,6 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +16,7 @@ import android.widget.Toast;
 public class NavHomeFragment extends Fragment {
 
     private static final int ADD_GRADE_REQUEST_CODE = 1;
-    private double totalGPA = 0.0;
+    private double totalGradePoints = 0.0;
     private int totalCreditHours = 0;
 
     public NavHomeFragment() {
@@ -69,13 +67,30 @@ public class NavHomeFragment extends Fragment {
                 double finalGrade = data.getDoubleExtra("finalGrade", 0.0);
 
                 totalCreditHours += creditHoursValue;
-                totalGPA = (totalGPA * (totalCreditHours - creditHoursValue) + finalGrade * creditHoursValue) / totalCreditHours;
+                double gradePoint = calculateGradePoint(finalGrade);
+                totalGradePoints += gradePoint * creditHoursValue;
+
+                double totalGPA = totalGradePoints / totalCreditHours;
 
                 TextView courseList = getView().findViewById(R.id.course_list);
                 TextView totalGPAText = getView().findViewById(R.id.total_gpa);
                 courseList.append("\n" + courseNameInput + " - " + finalGrade + " (" + creditHoursValue + " credit hours)");
                 totalGPAText.setText("Total GPA: " + totalGPA);
             }
+        }
+    }
+
+    private double calculateGradePoint(double finalGrade) {
+        if (finalGrade >= 90) {
+            return 4.0;
+        } else if (finalGrade >= 80) {
+            return 3.0;
+        } else if (finalGrade >= 70) {
+            return 2.0;
+        } else if (finalGrade >= 60) {
+            return 1.0;
+        } else {
+            return 0.0;
         }
     }
 }
