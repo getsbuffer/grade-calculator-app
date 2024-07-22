@@ -65,7 +65,10 @@ public class NavHomeFragment extends Fragment {
             }
         });
 
-        courseViewModel.getCourses().observe(getViewLifecycleOwner(), this::updateCourseList);
+        courseViewModel.getCourses().observe(getViewLifecycleOwner(), courses -> {
+            updateCourseList(courses);
+            updateGPA();
+        });
 
         return view;
     }
@@ -84,7 +87,6 @@ public class NavHomeFragment extends Fragment {
 
                 Course course = new Course(courseNameInput, creditHoursValue, finalGrade);
                 courseViewModel.addCourse(courseNameInput, course);
-                updateGPA();
             } else if (requestCode == DELETE_REQUEST_CODE) {
                 String deleteType = data.getStringExtra("deleteType");
                 String courseName = data.getStringExtra("courseName");
@@ -105,7 +107,6 @@ public class NavHomeFragment extends Fragment {
                         }
                     }
                 }
-                updateGPA();
             }
         } else {
             Log.d(TAG, "Result code not OK or data is null");
