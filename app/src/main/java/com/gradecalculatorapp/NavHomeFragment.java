@@ -21,7 +21,6 @@ import java.util.Map;
 public class NavHomeFragment extends Fragment {
 
     private static final int ADD_GRADE_REQUEST_CODE = 1;
-    private static final int DELETE_REQUEST_CODE = 2;
     private static final String TAG = "NavHomeFragment";
     private double totalGradePoints = 0.0;
     private int totalCreditHours = 0;
@@ -36,7 +35,7 @@ public class NavHomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView called");
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
+            View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         EditText courseName = view.findViewById(R.id.course_name);
         EditText creditHours = view.findViewById(R.id.credit_hours);
@@ -85,28 +84,13 @@ public class NavHomeFragment extends Fragment {
 
                 Log.d(TAG, "Adding course: " + courseNameInput + " with credit hours: " + creditHoursValue + " and final grade: " + finalGrade);
 
-                Course course = new Course(courseNameInput, creditHoursValue, finalGrade);
-                courseViewModel.addCourse(courseNameInput, course);
-            } else if (requestCode == DELETE_REQUEST_CODE) {
-                String deleteType = data.getStringExtra("deleteType");
-                String courseName = data.getStringExtra("courseName");
-                Log.d(TAG, "Delete type: " + deleteType + ", Course name: " + courseName);
-
-                if ("course".equals(deleteType)) {
-                    courseViewModel.removeCourse(courseName);
-                } else if ("grade".equals(deleteType)) {
-                    String categoryName = data.getStringExtra("categoryName");
-                    Log.d(TAG, "Category name: " + categoryName);
-                    Course course = courseViewModel.getCourses().getValue().get(courseName);
-                    if (course != null) {
-                        course.deleteGrade(categoryName);
-                        if (course.getGrades().isEmpty()) {
-                            courseViewModel.removeCourse(courseName);
-                        } else {
-                            courseViewModel.updateCourse(course);
-                        }
-                    }
+                Course course = courseViewModel.getCourses().getValue().get(courseNameInput);
+                if (course == null) {
+                    course = new Course(courseNameInput, creditHoursValue, finalGrade);
+                } else {
+                    course.addGrade(courseNameInput, finalGrade);
                 }
+                courseViewModel.updateCourse(course);
             }
         } else {
             Log.d(TAG, "Result code not OK or data is null");
@@ -122,11 +106,15 @@ public class NavHomeFragment extends Fragment {
             Button editButton = courseItemView.findViewById(R.id.edit_button);
             courseItemText.setText(course.getName() + " - " + course.getFinalGrade() + " (" + course.getCreditHours() + " credit hours)");
 
+            // Set an OnClickListener for the edit button
             editButton.setOnClickListener(v -> {
                 Toast.makeText(getActivity(), "Edit functionality is not available right now.", Toast.LENGTH_SHORT).show();
             });
 
             courseListLayout.addView(courseItemView);
+
+            // Log the grades for the course
+            Log.d(TAG, "Course: " + course.getName() + ", Grades: " + course.getGrades().toString());
         }
     }
 

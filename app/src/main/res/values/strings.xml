@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Grade Calculator App</string>
     <string name="home">Home</string>
-    <string name="delete">Delete</string>
+    <string name="clear">Clear</string>
     <string name="delete_course">Delete Course</string>
     <string name="delete_grade_from_course">Delete Grade from Course</string>
     <string name="course_name">Course Name</string>

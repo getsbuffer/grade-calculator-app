@@ -35,7 +35,29 @@ public class Course implements Serializable {
         return grades;
     }
 
-    public void deleteGrade(String categoryName) {
-        grades.remove(categoryName);
+    public void addGrade(String category, double grade) {
+        grades.put(category, grade);
+        updateFinalGrade();
+    }
+
+    public void deleteGrade(String category) {
+        grades.remove(category);
+        updateFinalGrade();
+    }
+
+    public boolean hasGrades() {
+        return !grades.isEmpty();
+    }
+
+    private void updateFinalGrade() {
+        if (grades.isEmpty()) {
+            finalGrade = 0.0;
+        } else {
+            double total = 0.0;
+            for (double grade : grades.values()) {
+                total += grade;
+            }
+            finalGrade = total / grades.size();
+        }
     }
 }

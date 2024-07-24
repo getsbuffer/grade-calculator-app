@@ -37,4 +37,7 @@ public class CourseViewModel extends ViewModel {
             courses.setValue(currentCourses);
         }
     }
+    public void clearAllCourses() {
+        courses.setValue(new HashMap<>());
+    }
 }

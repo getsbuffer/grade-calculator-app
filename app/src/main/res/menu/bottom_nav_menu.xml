@@ -4,7 +4,7 @@
         android:icon="@drawable/home_icon"
         android:title="@string/home" />
     <item
-        android:id="@+id/navigation_delete"
-        android:icon="@drawable/delete_icon"
-        android:title="@string/delete" />
+        android:id="@+id/navigation_clear"
+        android:icon="@drawable/clear_icon"
+        android:title="@string/clear" />
 </menu>
