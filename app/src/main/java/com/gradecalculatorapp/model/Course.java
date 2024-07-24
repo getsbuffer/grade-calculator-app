@@ -1,4 +1,4 @@
-package com.gradecalculatorapp;
+package com.gradecalculatorapp.model;
 
 import java.io.Serializable;
 import java.util.HashMap;

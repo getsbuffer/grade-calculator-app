@@ -5,7 +5,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import android.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +13,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.gradecalculatorapp.model.Course;
+import com.gradecalculatorapp.viewmodel.CourseViewModel;
 
 public class AddGradeFragment extends Fragment {
 
@@ -23,13 +26,11 @@ public class AddGradeFragment extends Fragment {
     private int creditHours;
 
     public AddGradeFragment() {
-        // Required empty public constructor
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_add_grade, container, false);
 
         EditText categoryName = view.findViewById(R.id.category_name);
@@ -46,9 +47,6 @@ public class AddGradeFragment extends Fragment {
         if (args != null) {
             courseName = args.getString("courseName");
             creditHours = args.getInt("creditHours");
-            Log.d(TAG, "Received courseName: " + courseName + ", creditHours: " + creditHours);
-        } else {
-            Log.e(TAG, "No arguments received");
         }
 
         addGradeButton.setOnClickListener(v -> {
@@ -61,31 +59,24 @@ public class AddGradeFragment extends Fragment {
                     double gradeValue = Double.parseDouble(numericalGradeInput);
                     double weightValue = Double.parseDouble(weightInput);
 
-                    // Add grade to list
                     gradeList.append("\n" + categoryNameInput + ": " + gradeValue + " (" + weightValue + "%)");
 
-                    // Calculate new total weighted grade (this is simplified for demonstration)
                     totalWeightedGrade += gradeValue * (weightValue / 100);
                     totalWeightedGradeText.setText("Total Weighted Grade: " + totalWeightedGrade);
-                    Log.d(TAG, "Added grade: " + gradeValue + " with weight: " + weightValue + " to category: " + categoryNameInput);
 
-                    // Update the course in ViewModel
                     Course course = courseViewModel.getCourses().getValue().get(courseName);
                     if (course == null) {
                         course = new Course(courseName, creditHours, totalWeightedGrade);
-                        Log.d(TAG, "Created new course: " + courseName);
+                        courseViewModel.addCourse(courseName, course);
+                    } else {
+                        course.addGrade(categoryNameInput, gradeValue);
+                        courseViewModel.updateCourse(course);
                     }
-                    course.addGrade(categoryNameInput, gradeValue);
-                    Log.d(TAG, "Current grades in course: " + course.getGrades().size());
-                    courseViewModel.updateCourse(course);
-                    Log.d(TAG, "Updated course in ViewModel: " + courseName);
                 } catch (NumberFormatException e) {
                     Toast.makeText(getActivity(), "Please enter valid numbers for grade and weight", Toast.LENGTH_SHORT).show();
-                    Log.e(TAG, "Invalid number format for grade or weight", e);
                 }
             } else {
                 Toast.makeText(getActivity(), "Please fill out all fields", Toast.LENGTH_SHORT).show();
-                Log.d(TAG, "Incomplete input fields");
             }
         });
 
@@ -96,7 +87,6 @@ public class AddGradeFragment extends Fragment {
             intent.putExtra("finalGrade", totalWeightedGrade);
             getActivity().setResult(AppCompatActivity.RESULT_OK, intent);
             getActivity().finish();
-            Log.d(TAG, "Done button clicked, finishing activity");
         });
 
         return view;

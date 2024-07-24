@@ -10,6 +10,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.gradecalculatorapp.viewmodel.CourseViewModel;
 
 public class MainActivity extends AppCompatActivity {
     private CourseViewModel courseViewModel;

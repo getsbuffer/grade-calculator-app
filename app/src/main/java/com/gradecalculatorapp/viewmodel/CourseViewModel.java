@@ -1,8 +1,11 @@
-package com.gradecalculatorapp;
+package com.gradecalculatorapp.viewmodel;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+
+import com.gradecalculatorapp.model.Course;
+
 import java.util.HashMap;
 import java.util.Map;
 

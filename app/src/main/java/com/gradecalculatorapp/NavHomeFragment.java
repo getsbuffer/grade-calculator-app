@@ -2,12 +2,12 @@ package com.gradecalculatorapp;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import android.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +16,11 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.navigation.Navigation;
+
+import com.gradecalculatorapp.model.Course;
+import com.gradecalculatorapp.viewmodel.CourseViewModel;
+
 import java.util.Map;
 
 public class NavHomeFragment extends Fragment {
@@ -34,12 +39,12 @@ public class NavHomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.d(TAG, "onCreateView called");
-            View view = inflater.inflate(R.layout.fragment_home, container, false);
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         EditText courseName = view.findViewById(R.id.course_name);
         EditText creditHours = view.findViewById(R.id.credit_hours);
         Button addCourseButton = view.findViewById(R.id.add_course_button);
+        Button deleteCourseButton = view.findViewById(R.id.delete_course_button);
         courseListLayout = view.findViewById(R.id.course_list_layout);
         totalGPAText = view.findViewById(R.id.total_gpa);
 
@@ -64,6 +69,8 @@ public class NavHomeFragment extends Fragment {
             }
         });
 
+        deleteCourseButton.setOnClickListener(v -> Navigation.findNavController(view).navigate(R.id.navigation_deleteFragment));
+
         courseViewModel.getCourses().observe(getViewLifecycleOwner(), courses -> {
             updateCourseList(courses);
             updateGPA();
@@ -76,29 +83,24 @@ public class NavHomeFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == AppCompatActivity.RESULT_OK && data != null) {
-            Log.d(TAG, "onActivityResult: Received result");
             if (requestCode == ADD_GRADE_REQUEST_CODE) {
                 String courseNameInput = data.getStringExtra("courseName");
                 int creditHoursValue = data.getIntExtra("creditHours", 0);
                 double finalGrade = data.getDoubleExtra("finalGrade", 0.0);
 
-                Log.d(TAG, "Adding course: " + courseNameInput + " with credit hours: " + creditHoursValue + " and final grade: " + finalGrade);
-
                 Course course = courseViewModel.getCourses().getValue().get(courseNameInput);
                 if (course == null) {
                     course = new Course(courseNameInput, creditHoursValue, finalGrade);
+                    courseViewModel.addCourse(courseNameInput, course);
                 } else {
                     course.addGrade(courseNameInput, finalGrade);
+                    courseViewModel.updateCourse(course);
                 }
-                courseViewModel.updateCourse(course);
             }
-        } else {
-            Log.d(TAG, "Result code not OK or data is null");
         }
     }
 
     private void updateCourseList(Map<String, Course> courses) {
-        Log.d(TAG, "Updating course list with " + courses.size() + " courses.");
         courseListLayout.removeAllViews();
         for (Course course : courses.values()) {
             View courseItemView = LayoutInflater.from(getContext()).inflate(R.layout.course_item, courseListLayout, false);
@@ -106,15 +108,11 @@ public class NavHomeFragment extends Fragment {
             Button editButton = courseItemView.findViewById(R.id.edit_button);
             courseItemText.setText(course.getName() + " - " + course.getFinalGrade() + " (" + course.getCreditHours() + " credit hours)");
 
-            // Set an OnClickListener for the edit button
             editButton.setOnClickListener(v -> {
                 Toast.makeText(getActivity(), "Edit functionality is not available right now.", Toast.LENGTH_SHORT).show();
             });
 
             courseListLayout.addView(courseItemView);
-
-            // Log the grades for the course
-            Log.d(TAG, "Course: " + course.getName() + ", Grades: " + course.getGrades().toString());
         }
     }
 
@@ -131,7 +129,6 @@ public class NavHomeFragment extends Fragment {
 
         double totalGPA = totalCreditHours == 0 ? 0 : totalGradePoints / totalCreditHours;
 
-        Log.d(TAG, "Updating GPA to " + totalGPA);
         totalGPAText.setText("Total GPA: " + totalGPA);
     }
 }

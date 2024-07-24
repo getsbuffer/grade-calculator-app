@@ -19,4 +19,5 @@
     <string name="grades_will_be_listed_here">All grades:</string>
     <string name="total_weighted_grade_0_0">Total weighted grade</string>
     <string name="done">Done</string>
+    <string name="delete_course_button">Delete Course</string>
 </resources>

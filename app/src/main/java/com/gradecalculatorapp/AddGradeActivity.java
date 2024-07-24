@@ -11,7 +11,6 @@ public class AddGradeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_grade);
 
-        // Pass the extras to the fragment
         if (savedInstanceState == null) {
             AddGradeFragment fragment = new AddGradeFragment();
             fragment.setArguments(getIntent().getExtras());
