@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Grade Calculator App</string>
     <string name="home">Home</string>
-    <string name="delete">Delete</string>
+    <string name="clear">Clear</string>
     <string name="delete_course">Delete Course</string>
     <string name="delete_grade_from_course">Delete Grade from Course</string>
     <string name="course_name">Course Name</string>
@@ -19,4 +19,8 @@
     <string name="grades_will_be_listed_here">All grades:</string>
     <string name="total_weighted_grade_0_0">Total weighted grade</string>
     <string name="done">Done</string>
+    <string name="delete_course_button">Delete Course</string>
+    <string name="grade_item">Grade Item</string>
+    <string name="delete_grade">Delete</string>
+    <string name="all_grades">All Grades:</string>
 </resources>

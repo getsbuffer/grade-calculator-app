@@ -9,18 +9,9 @@
         android:label="Home"
         tools:layout="@layout/fragment_home" >
         <action
-            android:id="@+id/action_home_to_addClass"
-            app:destination="@id/navigation_addClass" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/navigation_addClass"
-        android:name="com.gradecalculatorapp.AddCourseFragment"
-        android:label="Add Class"
-        tools:layout="@layout/fragment_add_grade">
-        <action
-            android:id="@+id/action_addClass_to_addGrade"
+            android:id="@+id/action_home_to_addGrade"
             app:destination="@id/navigation_addGrade" />
+
     </fragment>
 
     <fragment
@@ -34,8 +25,12 @@
     </fragment>
 
     <fragment
-        android:id="@+id/navigation_delete"
+        android:id="@+id/navigation_deleteFragment"
         android:name="com.gradecalculatorapp.DeleteFragment"
-        android:label="Delete"
-        tools:layout="@layout/fragment_delete" />
+        android:label="Delete Course"
+        tools:layout="@layout/fragment_delete">
+        <action
+            android:id="@+id/action_deleteFragment_to_home"
+            app:destination="@id/navigation_home" />
+    </fragment>
 </navigation>
