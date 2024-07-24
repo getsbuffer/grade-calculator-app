@@ -50,6 +50,7 @@ public class NavHomeFragment extends Fragment {
 
         courseViewModel = new ViewModelProvider(requireActivity()).get(CourseViewModel.class);
 
+
         addCourseButton.setOnClickListener(v -> {
             String courseNameInput = courseName.getText().toString();
             String creditHoursInput = creditHours.getText().toString();
@@ -72,6 +73,8 @@ public class NavHomeFragment extends Fragment {
         deleteCourseButton.setOnClickListener(v -> Navigation.findNavController(view).navigate(R.id.navigation_deleteFragment));
 
         courseViewModel.getCourses().observe(getViewLifecycleOwner(), courses -> {
+            courseName.setText("");
+            creditHours.setText("");
             updateCourseList(courses);
             updateGPA();
         });

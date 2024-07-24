@@ -63,6 +63,10 @@ public class AddGradeFragment extends Fragment {
 
                     addGradeToList(categoryNameInput, gradeValue, weightValue);
 
+                    categoryName.setText("");
+                    numericalGrade.setText("");
+                    weight.setText("");
+
                     totalWeightedGrade += gradeValue * (weightValue / 100);
                     totalWeightedGradeText.setText("Total Weighted Grade: " + totalWeightedGrade);
 
