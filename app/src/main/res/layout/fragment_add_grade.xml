@@ -23,6 +23,7 @@
         android:layout_height="wrap_content"
         android:hint="@string/weight"
         android:inputType="numberDecimal" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -42,12 +43,18 @@
             android:text="@string/done"
             android:layout_marginTop="8dp" />
     </LinearLayout>
-
     <TextView
-        android:id="@+id/grade_list"
+        android:id="@+id/all_grades_label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/grades_will_be_listed_here" />
+        android:text="@string/all_grades"
+        android:paddingTop="16dp" />
+
+    <LinearLayout
+        android:id="@+id/grade_list_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" />
 
     <TextView
         android:id="@+id/total_weighted_grade"

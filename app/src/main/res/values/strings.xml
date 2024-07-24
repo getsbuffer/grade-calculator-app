@@ -20,4 +20,7 @@
     <string name="total_weighted_grade_0_0">Total weighted grade</string>
     <string name="done">Done</string>
     <string name="delete_course_button">Delete Course</string>
+    <string name="grade_item">Grade Item</string>
+    <string name="delete_grade">Delete</string>
+    <string name="all_grades">All Grades:</string>
 </resources>

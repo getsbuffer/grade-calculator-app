@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +25,7 @@ public class AddGradeFragment extends Fragment {
     private CourseViewModel courseViewModel;
     private String courseName;
     private int creditHours;
+    private LinearLayout gradeListLayout;
 
     public AddGradeFragment() {
     }
@@ -37,9 +39,9 @@ public class AddGradeFragment extends Fragment {
         EditText numericalGrade = view.findViewById(R.id.grade);
         EditText weight = view.findViewById(R.id.weight);
         Button addGradeButton = view.findViewById(R.id.add_grade_button);
-        TextView gradeList = view.findViewById(R.id.grade_list);
         TextView totalWeightedGradeText = view.findViewById(R.id.total_weighted_grade);
         Button doneButton = view.findViewById(R.id.done_button);
+        gradeListLayout = view.findViewById(R.id.grade_list_layout);
 
         courseViewModel = new ViewModelProvider(requireActivity()).get(CourseViewModel.class);
 
@@ -59,7 +61,7 @@ public class AddGradeFragment extends Fragment {
                     double gradeValue = Double.parseDouble(numericalGradeInput);
                     double weightValue = Double.parseDouble(weightInput);
 
-                    gradeList.append("\n" + categoryNameInput + ": " + gradeValue + " (" + weightValue + "%)");
+                    addGradeToList(categoryNameInput, gradeValue, weightValue);
 
                     totalWeightedGrade += gradeValue * (weightValue / 100);
                     totalWeightedGradeText.setText("Total Weighted Grade: " + totalWeightedGrade);
@@ -90,5 +92,48 @@ public class AddGradeFragment extends Fragment {
         });
 
         return view;
+    }
+
+    private void addGradeToList(String categoryName, double grade, double weight) {
+        View gradeItemView = LayoutInflater.from(getContext()).inflate(R.layout.grade_item, gradeListLayout, false);
+        TextView gradeItemText = gradeItemView.findViewById(R.id.grade_item_text);
+        Button deleteGradeButton = gradeItemView.findViewById(R.id.delete_grade_button);
+
+        gradeItemText.setText(categoryName + ": " + grade + " (" + weight + "%)");
+        gradeItemView.setTag(new GradeItem(categoryName, grade, weight));
+
+        deleteGradeButton.setOnClickListener(v -> {
+            GradeItem gradeItem = (GradeItem) gradeItemView.getTag();
+            totalWeightedGrade -= gradeItem.getGrade() * (gradeItem.getWeight() / 100);
+            ((ViewGroup) gradeItemView.getParent()).removeView(gradeItemView);
+            TextView totalWeightedGradeText = getView().findViewById(R.id.total_weighted_grade);
+            totalWeightedGradeText.setText("Total Weighted Grade: " + totalWeightedGrade);
+        });
+
+        gradeListLayout.addView(gradeItemView);
+    }
+
+    private static class GradeItem {
+        private String categoryName;
+        private double grade;
+        private double weight;
+
+        public GradeItem(String categoryName, double grade, double weight) {
+            this.categoryName = categoryName;
+            this.grade = grade;
+            this.weight = weight;
+        }
+
+        public String getCategoryName() {
+            return categoryName;
+        }
+
+        public double getGrade() {
+            return grade;
+        }
+
+        public double getWeight() {
+            return weight;
+        }
     }
 }
