@@ -1,8 +1,6 @@
 package com.gradecalculatorapp;
 
-import android.content.Intent;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -17,6 +15,8 @@ import android.widget.Toast;
 
 import com.gradecalculatorapp.model.Course;
 import com.gradecalculatorapp.viewmodel.CourseViewModel;
+
+import java.util.Map;
 
 public class AddGradeFragment extends Fragment {
 
@@ -49,6 +49,16 @@ public class AddGradeFragment extends Fragment {
         if (args != null) {
             courseName = args.getString("courseName");
             creditHours = args.getInt("creditHours");
+
+            Course course = courseViewModel.getCourses().getValue().get(courseName);
+            if (course != null) {
+                totalWeightedGrade = course.getFinalGrade();
+                totalWeightedGradeText.setText("Total Weighted Grade: " + totalWeightedGrade);
+
+                for (Map.Entry<String, Double> grade : course.getGrades().entrySet()) {
+                    addGradeToList(grade.getKey(), grade.getValue(), 100.0 / course.getGrades().size());
+                }
+            }
         }
 
         addGradeButton.setOnClickListener(v -> {
@@ -87,12 +97,7 @@ public class AddGradeFragment extends Fragment {
         });
 
         doneButton.setOnClickListener(v -> {
-            Intent intent = new Intent();
-            intent.putExtra("courseName", courseName);
-            intent.putExtra("creditHours", creditHours);
-            intent.putExtra("finalGrade", totalWeightedGrade);
-            getActivity().setResult(AppCompatActivity.RESULT_OK, intent);
-            getActivity().finish();
+            getActivity().onBackPressed();
         });
 
         return view;
@@ -112,6 +117,12 @@ public class AddGradeFragment extends Fragment {
             ((ViewGroup) gradeItemView.getParent()).removeView(gradeItemView);
             TextView totalWeightedGradeText = getView().findViewById(R.id.total_weighted_grade);
             totalWeightedGradeText.setText("Total Weighted Grade: " + totalWeightedGrade);
+
+            Course course = courseViewModel.getCourses().getValue().get(courseName);
+            if (course != null) {
+                course.deleteGrade(gradeItem.getCategoryName());
+                courseViewModel.updateCourse(course);
+            }
         });
 
         gradeListLayout.addView(gradeItemView);

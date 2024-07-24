@@ -17,8 +17,6 @@ public class Course implements Serializable {
         this.grades = new HashMap<>();
     }
 
-    // Getters and Setters
-
     public String getName() {
         return name;
     }
@@ -43,10 +41,6 @@ public class Course implements Serializable {
     public void deleteGrade(String category) {
         grades.remove(category);
         updateFinalGrade();
-    }
-
-    public boolean hasGrades() {
-        return !grades.isEmpty();
     }
 
     private void updateFinalGrade() {
