@@ -122,9 +122,25 @@ public class NavHomeFragment extends Fragment {
 
         totalGradePoints = 0.0;
         totalCreditHours = 0;
+
         for (Course course : courses.values()) {
+            double finalGrade = course.getFinalGrade();
+            int gradePoints;
+
+            if (finalGrade >= 90) {
+                gradePoints = 4;
+            } else if (finalGrade >= 80) {
+                gradePoints = 3;
+            } else if (finalGrade >= 70) {
+                gradePoints = 2;
+            } else if (finalGrade >= 60) {
+                gradePoints = 1;
+            } else {
+                gradePoints = 0;
+            }
+
             totalCreditHours += course.getCreditHours();
-            totalGradePoints += course.getFinalGrade() * course.getCreditHours();
+            totalGradePoints += gradePoints * course.getCreditHours();
         }
 
         double totalGPA = totalCreditHours == 0 ? 0 : totalGradePoints / totalCreditHours;
