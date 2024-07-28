@@ -46,3 +46,4 @@ public class DeleteFragment extends Fragment {
         return view;
     }
 }
+
