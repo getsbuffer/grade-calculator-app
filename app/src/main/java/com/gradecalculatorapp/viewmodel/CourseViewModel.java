@@ -1,46 +1,77 @@
 package com.gradecalculatorapp.viewmodel;
 
+import android.app.Application;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
 import com.gradecalculatorapp.model.Course;
+import com.gradecalculatorapp.repo.CourseRepository;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-public class CourseViewModel extends ViewModel {
+public class CourseViewModel extends AndroidViewModel {
+    private CourseRepository courseRepository;
+    private LiveData<List<Course>> allCourses;
+    private MutableLiveData<Map<String, Course>> courseMapLiveData;
 
-    private final MutableLiveData<Map<String, Course>> courses = new MutableLiveData<>(new HashMap<>());
+    public CourseViewModel(Application application) {
+        super(application);
+        courseRepository = new CourseRepository(application);
+        allCourses = courseRepository.getAllCourses();
+        courseMapLiveData = new MutableLiveData<>(new HashMap<>());
+        loadCourses();
+    }
+
+    private void loadCourses() {
+        allCourses.observeForever(courses -> {
+            Map<String, Course> courseMap = new HashMap<>();
+            for (Course course : courses) {
+                courseMap.put(course.getName(), course);
+            }
+            courseMapLiveData.setValue(courseMap);
+        });
+    }
 
     public LiveData<Map<String, Course>> getCourses() {
-        return courses;
+        return courseMapLiveData;
     }
 
-    public void addCourse(String name, Course course) {
-        Map<String, Course> currentCourses = courses.getValue();
-        if (currentCourses != null) {
-            currentCourses.put(name, course);
-            courses.setValue(currentCourses);
-        }
-    }
-
-    public void removeCourse(String name) {
-        Map<String, Course> currentCourses = courses.getValue();
-        if (currentCourses != null) {
-            currentCourses.remove(name);
-            courses.setValue(currentCourses);
+    public void addCourse(String courseName, Course course) {
+        courseRepository.insert(course);
+        // Update courseMapLiveData to reflect the changes
+        Map<String, Course> courseMap = courseMapLiveData.getValue();
+        if (courseMap != null) {
+            courseMap.put(courseName, course);
+            courseMapLiveData.setValue(courseMap);
         }
     }
 
     public void updateCourse(Course course) {
-        Map<String, Course> currentCourses = courses.getValue();
-        if (currentCourses != null) {
-            currentCourses.put(course.getName(), course);
-            courses.setValue(currentCourses);
+        courseRepository.update(course);
+        // Update courseMapLiveData to reflect the changes
+        Map<String, Course> courseMap = courseMapLiveData.getValue();
+        if (courseMap != null) {
+            courseMap.put(course.getName(), course);
+            courseMapLiveData.setValue(courseMap);
         }
     }
+
+    public void removeCourse(String courseName) {
+        Map<String, Course> courseMap = courseMapLiveData.getValue();
+        if (courseMap != null && courseMap.containsKey(courseName)) {
+            Course course = courseMap.get(courseName);
+            courseRepository.delete(course);
+            courseMap.remove(courseName);
+            courseMapLiveData.setValue(courseMap);
+        }
+    }
+
     public void clearAllCourses() {
-        courses.setValue(new HashMap<>());
+        courseRepository.deleteAllCourses();
+        courseMapLiveData.setValue(new HashMap<>()); // Clear the map
     }
 }
+
