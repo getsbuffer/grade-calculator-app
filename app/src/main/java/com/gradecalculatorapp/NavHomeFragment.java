@@ -9,42 +9,55 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.gradecalculatorapp.Adapter.CourseAdapter;
 import com.gradecalculatorapp.model.Course;
 import com.gradecalculatorapp.viewmodel.CourseViewModel;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class NavHomeFragment extends Fragment {
 
-    private static final String TAG = "NavHomeFragment";
     private double totalGradePoints = 0.0;
     private int totalCreditHours = 0;
-    private LinearLayout courseListLayout;
+    private RecyclerView courseRecyclerView;
+
     private TextView totalGPAText;
     private CourseViewModel courseViewModel;
+    private CourseAdapter courseAdapter;
+    private List<Course> courseList = new ArrayList<>();
 
     public NavHomeFragment() {
+        super(R.layout.fragment_home);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         EditText courseName = view.findViewById(R.id.course_name);
         EditText creditHours = view.findViewById(R.id.credit_hours);
         Button addCourseButton = view.findViewById(R.id.add_course_button);
         Button deleteCourseButton = view.findViewById(R.id.delete_course_button);
-        courseListLayout = view.findViewById(R.id.course_list_layout);
+        courseRecyclerView = view.findViewById(R.id.course_recycler_view);
         totalGPAText = view.findViewById(R.id.total_gpa);
 
+        // Initialize ViewModel
         courseViewModel = new ViewModelProvider(requireActivity()).get(CourseViewModel.class);
 
+        // Setup RecyclerView
+        courseRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        courseAdapter = new CourseAdapter(courseList, course -> navigateToAddGradeFragment(course.getName(), course.getCreditHours()));
+        courseRecyclerView.setAdapter(courseAdapter);
+
+        // Add course button listener
         addCourseButton.setOnClickListener(v -> {
             String courseNameInput = courseName.getText().toString();
             String creditHoursInput = creditHours.getText().toString();
@@ -63,8 +76,10 @@ public class NavHomeFragment extends Fragment {
             }
         });
 
+        // Delete course button listener
         deleteCourseButton.setOnClickListener(v -> Navigation.findNavController(view).navigate(R.id.navigation_deleteFragment));
 
+        // Observe changes in course list
         courseViewModel.getCourses().observe(getViewLifecycleOwner(), courses -> {
             courseName.setText("");
             creditHours.setText("");
@@ -83,19 +98,9 @@ public class NavHomeFragment extends Fragment {
     }
 
     private void updateCourseList(Map<String, Course> courses) {
-        courseListLayout.removeAllViews();
-        for (Course course : courses.values()) {
-            View courseItemView = LayoutInflater.from(getContext()).inflate(R.layout.course_item, courseListLayout, false);
-            TextView courseItemText = courseItemView.findViewById(R.id.course_item_text);
-            Button editButton = courseItemView.findViewById(R.id.edit_button);
-            courseItemText.setText(course.getName() + " - " + course.getFinalGrade() + " (" + course.getCreditHours() + " credit hours)");
-
-            editButton.setOnClickListener(v -> {
-                navigateToAddGradeFragment(course.getName(), course.getCreditHours());
-            });
-
-            courseListLayout.addView(courseItemView);
-        }
+        courseList.clear();
+        courseList.addAll(courses.values());
+        courseAdapter.notifyDataSetChanged();
     }
 
     private void updateGPA() {
