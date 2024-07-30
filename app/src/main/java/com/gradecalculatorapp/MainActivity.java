@@ -2,9 +2,12 @@ package com.gradecalculatorapp;
 
 import android.os.Bundle;
 import android.widget.Toast;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.util.Log;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
@@ -21,6 +24,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         BottomNavigationView navView = findViewById(R.id.nav_view);
+
+        handlerThread = new HandlerThread("BackgroundThread");
+        handlerThread.start();
+
+        backgroundHandler = new Handler(handlerThread.getLooper());
 
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
         assert navHostFragment != null;
@@ -41,6 +49,18 @@ public class MainActivity extends AppCompatActivity {
             }
             return false;
         });
+
+        backgroundHandler.post(() -> {
+            for (int i = 0; i <= 10; i++) {
+                Log.d("HandlerBGThread", "Background task counting to " + i);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ignored) {
+
+                }
+            }
+            Log.d("HandlerBGThread", "Background task completed");
+        });
     }
     private void showClearConfirmationDialog() {
         new AlertDialog.Builder(this)
@@ -53,5 +73,17 @@ public class MainActivity extends AppCompatActivity {
                 .setNegativeButton(android.R.string.no, null)
                 .show();
     }
+
+
+    private HandlerThread handlerThread;
+    private Handler backgroundHandler;
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        handlerThread.quitSafely();
+    }
+
+
 }
 

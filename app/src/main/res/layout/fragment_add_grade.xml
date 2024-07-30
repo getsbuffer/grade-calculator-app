@@ -43,6 +43,13 @@
             android:text="@string/done"
             android:layout_marginTop="8dp" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/total_weighted_grade"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/total_weighted_grade_0_0" />
+
     <TextView
         android:id="@+id/all_grades_label"
         android:layout_width="match_parent"
@@ -50,15 +57,14 @@
         android:text="@string/all_grades"
         android:paddingTop="16dp" />
 
-    <LinearLayout
-        android:id="@+id/grade_list_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" />
 
-    <TextView
-        android:id="@+id/total_weighted_grade"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/grades_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/total_weighted_grade_0_0" />
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginBottom="56dp"
+        android:scrollbars="vertical" />
+
+
 </LinearLayout>
