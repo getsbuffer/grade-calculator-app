@@ -112,26 +112,44 @@ public class NavHomeFragment extends Fragment {
 
         for (Course course : courses.values()) {
             double finalGrade = course.getFinalGrade();
-            int gradePoints;
+            double gradePoints;
 
-            if (finalGrade >= 90) {
-                gradePoints = 4;
+
+            if (finalGrade >= 93) {
+                gradePoints = 4.0;
+            } else if (finalGrade >= 90) {
+                gradePoints = 3.75;
+            } else if (finalGrade >= 87) {
+                gradePoints = 3.25;
+            } else if (finalGrade >= 83) {
+                gradePoints = 3.0;
             } else if (finalGrade >= 80) {
-                gradePoints = 3;
+                gradePoints = 2.75;
+            } else if (finalGrade >= 77) {
+                gradePoints = 2.25;
+            } else if (finalGrade >= 73) {
+                gradePoints = 2.0;
             } else if (finalGrade >= 70) {
-                gradePoints = 2;
+                gradePoints = 1.75;
+            } else if (finalGrade >= 67) {
+                gradePoints = 1.25;
+            } else if (finalGrade >= 63) {
+                gradePoints = 1.0;
             } else if (finalGrade >= 60) {
-                gradePoints = 1;
+                gradePoints = 0.75;
             } else {
-                gradePoints = 0;
+                gradePoints = 0.0;
             }
 
             totalCreditHours += course.getCreditHours();
             totalGradePoints += gradePoints * course.getCreditHours();
         }
-
-        double totalGPA = totalCreditHours == 0 ? 0 : totalGradePoints / totalCreditHours;
-
-        totalGPAText.setText("Total GPA: " + totalGPA);
+        if (totalCreditHours != 0) {
+            double totalGPA = totalGradePoints / totalCreditHours;
+            totalGPA = Math.round(totalGPA * 100.0) / 100.0;
+            totalGPAText.setText("Total GPA: " + totalGPA);
+        } else {
+            totalGPAText.setText("Total GPA: 0.00");
+        }
     }
 }
