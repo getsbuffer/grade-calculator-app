@@ -50,19 +50,16 @@ public class MainActivity extends AppCompatActivity {
             return false;
         });
 
-        backgroundHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                for (int i = 0; i <= 10; i++) {
-                    Log.d("HandlerBGThread", "Background task counting to " + i);
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException ignored) {
+        backgroundHandler.post(() -> {
+            for (int i = 0; i <= 10; i++) {
+                Log.d("HandlerBGThread", "Background task counting to " + i);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ignored) {
 
-                    }
                 }
-                Log.d("HandlerBGThread", "Background task completed");
             }
+            Log.d("HandlerBGThread", "Background task completed");
         });
     }
     private void showClearConfirmationDialog() {
