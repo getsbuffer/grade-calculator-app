@@ -18,7 +18,7 @@ public class Course implements Serializable {
     private String name;
     private int creditHours;
     private double finalGrade;
-    private Map<String, Double> grades;
+    private Map<String, GradeDetail> grades;
 
     public Course(String name, int creditHours, double finalGrade) {
         this.name = name;
@@ -26,8 +26,6 @@ public class Course implements Serializable {
         this.finalGrade = finalGrade;
         this.grades = new HashMap<>();
     }
-
-    // Getters and setters for all fields
 
     public int getId() {
         return id;
@@ -61,17 +59,17 @@ public class Course implements Serializable {
         this.finalGrade = finalGrade;
     }
 
-    public Map<String, Double> getGrades() {
+    public Map<String, GradeDetail> getGrades() {
         return grades;
     }
 
-    public void setGrades(Map<String, Double> grades) {
+    public void setGrades(Map<String, GradeDetail> grades) {
         this.grades = grades;
         updateFinalGrade();
     }
 
-    public void addGrade(String category, double grade) {
-        grades.put(category, grade);
+    public void addGrade(String category, double value, double weight) {
+        grades.put(category, new GradeDetail(value, weight));
         updateFinalGrade();
     }
 
@@ -84,12 +82,13 @@ public class Course implements Serializable {
         if (grades.isEmpty()) {
             finalGrade = 0.0;
         } else {
-            double total = 0.0;
-            for (double grade : grades.values()) {
-                total += grade;
+            double totalWeightedScore = 0.0;
+            double totalWeight = 0.0;
+            for (GradeDetail detail : grades.values()) {
+                totalWeightedScore += detail.getValue() * (detail.getWeight() / 100);
+                totalWeight += detail.getWeight();
             }
-            finalGrade = total / grades.size();
+            finalGrade = (totalWeight == 0) ? 0 : totalWeightedScore;
         }
     }
 }
-

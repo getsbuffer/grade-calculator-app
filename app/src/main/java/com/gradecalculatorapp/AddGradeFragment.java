@@ -11,12 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gradecalculatorapp.Adapter.GradesAdapter;
 import com.gradecalculatorapp.model.Course;
+import com.gradecalculatorapp.model.GradeDetail;
 import com.gradecalculatorapp.viewmodel.CourseViewModel;
 
 import java.util.ArrayList;
@@ -66,8 +66,10 @@ public class AddGradeFragment extends Fragment {
                 totalWeightedGrade = course.getFinalGrade();
                 totalWeightedGradeText.setText("Total Weighted Grade: " + totalWeightedGrade);
 
-                for (Map.Entry<String, Double> grade : course.getGrades().entrySet()) {
-                    addGradeToList(grade.getKey(), grade.getValue(), 100.0 / course.getGrades().size());
+                for (Map.Entry<String, GradeDetail> entry : course.getGrades().entrySet()) {
+                    String category = entry.getKey();
+                    GradeDetail detail = entry.getValue();
+                    addGradeToList(category, detail.getValue(), detail.getWeight());
                 }
             }
         }
@@ -94,9 +96,10 @@ public class AddGradeFragment extends Fragment {
                     Course course = courseViewModel.getCourses().getValue().get(courseName);
                     if (course == null) {
                         course = new Course(courseName, creditHours, totalWeightedGrade);
+                        course.addGrade(categoryNameInput, gradeValue, weightValue);
                         courseViewModel.addCourse(courseName, course);
                     } else {
-                        course.addGrade(categoryNameInput, gradeValue);
+                        course.addGrade(categoryNameInput, gradeValue, weightValue);
                         courseViewModel.updateCourse(course);
                     }
                 } catch (NumberFormatException e) {
