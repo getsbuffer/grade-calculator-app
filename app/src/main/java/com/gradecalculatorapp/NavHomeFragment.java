@@ -114,7 +114,6 @@ public class NavHomeFragment extends Fragment {
             double finalGrade = course.getFinalGrade();
             double gradePoints;
 
-
             if (finalGrade >= 93) {
                 gradePoints = 4.0;
             } else if (finalGrade >= 90) {
@@ -146,10 +145,14 @@ public class NavHomeFragment extends Fragment {
         }
         if (totalCreditHours != 0) {
             double totalGPA = totalGradePoints / totalCreditHours;
-            totalGPA = Math.round(totalGPA * 100.0) / 100.0;
-            totalGPAText.setText("Total GPA: " + totalGPA);
+            totalGPA = roundToTwoDecimalPlaces(totalGPA);
+            totalGPAText.setText(String.format("Total GPA: %.2f", totalGPA));
         } else {
             totalGPAText.setText("Total GPA: 0.00");
         }
+    }
+
+    private double roundToTwoDecimalPlaces(double value) {
+        return Math.round(value * 100.0) / 100.0;
     }
 }

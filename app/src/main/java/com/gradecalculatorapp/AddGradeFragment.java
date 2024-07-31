@@ -64,12 +64,12 @@ public class AddGradeFragment extends Fragment {
             Course course = courseViewModel.getCourses().getValue().get(courseName);
             if (course != null) {
                 totalWeightedGrade = course.getFinalGrade();
-                totalWeightedGradeText.setText("Total Weighted Grade: " + totalWeightedGrade);
+                totalWeightedGradeText.setText(String.format("Total Weighted Grade: %.2f", totalWeightedGrade));
 
                 for (Map.Entry<String, GradeDetail> entry : course.getGrades().entrySet()) {
                     String category = entry.getKey();
                     GradeDetail detail = entry.getValue();
-                    addGradeToList(category, detail.getValue(), detail.getWeight());
+                    addGradeToList(category, roundToTwoDecimalPlaces(detail.getValue()), roundToTwoDecimalPlaces(detail.getWeight()));
                 }
             }
         }
@@ -84,6 +84,9 @@ public class AddGradeFragment extends Fragment {
                     double gradeValue = Double.parseDouble(numericalGradeInput);
                     double weightValue = Double.parseDouble(weightInput);
 
+                    gradeValue = roundToTwoDecimalPlaces(gradeValue);
+                    weightValue = roundToTwoDecimalPlaces(weightValue);
+
                     addGradeToList(categoryNameInput, gradeValue, weightValue);
 
                     categoryName.setText("");
@@ -91,7 +94,7 @@ public class AddGradeFragment extends Fragment {
                     weight.setText("");
 
                     totalWeightedGrade += gradeValue * (weightValue / 100);
-                    totalWeightedGradeText.setText("Total Weighted Grade: " + totalWeightedGrade);
+                    totalWeightedGradeText.setText(String.format("Total Weighted Grade: %.2f", totalWeightedGrade));
 
                     Course course = courseViewModel.getCourses().getValue().get(courseName);
                     if (course == null) {
@@ -129,13 +132,17 @@ public class AddGradeFragment extends Fragment {
         gradesAdapter.notifyDataSetChanged();
 
         TextView totalWeightedGradeText = getView().findViewById(R.id.total_weighted_grade);
-        totalWeightedGradeText.setText("Total Weighted Grade: " + totalWeightedGrade);
+        totalWeightedGradeText.setText(String.format("Total Weighted Grade: %.2f", totalWeightedGrade));
 
         Course course = courseViewModel.getCourses().getValue().get(courseName);
         if (course != null) {
             course.deleteGrade(gradeItem.getCategoryName());
             courseViewModel.updateCourse(course);
         }
+    }
+
+    private double roundToTwoDecimalPlaces(double value) {
+        return Math.round(value * 100.0) / 100.0;
     }
 
     public static class GradeItem {
