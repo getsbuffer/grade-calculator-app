@@ -20,7 +20,7 @@ public class Converters {
         String[] entries = value.split(",");
         for (String entry : entries) {
             String[] keyValue = entry.split("=");
-            if (keyValue.length == 2) { // Ensure the entry contains exactly two parts
+            if (keyValue.length == 2) {
                 String category = keyValue[0];
                 String[] detailParts = keyValue[1].split(":");
                 if (detailParts.length == 2) {
