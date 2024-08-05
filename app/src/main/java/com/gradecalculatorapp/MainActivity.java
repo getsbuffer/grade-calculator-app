@@ -25,9 +25,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         BottomNavigationView navView = findViewById(R.id.nav_view);
 
-        handlerThread = new HandlerThread("BackgroundThread");
-        handlerThread.start();
-
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
         assert navHostFragment != null;
         NavController navController = navHostFragment.getNavController();
