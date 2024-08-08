@@ -37,7 +37,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
     public void onBindViewHolder(@NonNull CourseViewHolder holder, int position) {
         Course course = courseList.get(position);
         String letterGrade = course.calculateLetterGrade(course.getFinalGrade());
-        holder.courseItemText.setText(course.getName() + " - " + course.getFinalGrade() + " (" + letterGrade + ") (" + course.getCreditHours() + " credit hours)");
+        holder.courseItemText.setText(course.getName() + " - " + Math.round(course.getFinalGrade() * 100.0) / 100.0 + " (" + letterGrade + ")\n (" + course.getCreditHours() + " credit hours)");
         holder.editButton.setOnClickListener(v -> editButtonClickListener.onEditButtonClick(course));
     }
 
