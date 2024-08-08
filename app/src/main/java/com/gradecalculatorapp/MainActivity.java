@@ -56,13 +56,9 @@ public class MainActivity extends AppCompatActivity {
                 .setNegativeButton(android.R.string.no, null)
                 .show();
     }
-
-
-    private HandlerThread handlerThread;
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        handlerThread.quitSafely();
     }
 
 

@@ -1,4 +1,4 @@
-package com.gradecalculatorapp.Adapter;
+package com.gradecalculatorapp.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;

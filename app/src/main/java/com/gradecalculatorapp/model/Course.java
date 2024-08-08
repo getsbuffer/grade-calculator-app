@@ -18,11 +18,13 @@ public class Course implements Serializable {
     private String name;
     private int creditHours;
     private double finalGrade;
+    private String letterGrade;
     private Map<String, GradeDetail> grades;
 
-    public Course(String name, int creditHours, double finalGrade) {
+    public Course(String name, String letterGrade, int creditHours, double finalGrade) {
         this.name = name;
         this.creditHours = creditHours;
+        this.letterGrade = letterGrade;
         this.finalGrade = finalGrade;
         this.grades = new HashMap<>();
     }
@@ -42,6 +44,9 @@ public class Course implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
+    public String getLetterGrade() { return letterGrade; }
+
+    public void setLetterGrade(String letterGrade) { this.letterGrade = letterGrade; }
 
     public int getCreditHours() {
         return creditHours;
@@ -89,6 +94,33 @@ public class Course implements Serializable {
                 totalWeight += detail.getWeight();
             }
             finalGrade = (totalWeight == 0) ? 0 : totalWeightedScore;
+        }
+    }
+    public String calculateLetterGrade(double grade) {
+        if (grade >= 93) {
+            return "A";
+        } else if (grade >= 90) {
+            return "A-";
+        } else if (grade >= 87) {
+            return "B+";
+        } else if (grade >= 83) {
+            return "B";
+        } else if (grade >= 80) {
+            return "B-";
+        } else if (grade >= 77) {
+            return "C+";
+        } else if (grade >= 73) {
+            return "C";
+        } else if (grade >= 70) {
+            return "C-";
+        } else if (grade >= 67) {
+            return "D+";
+        } else if (grade >= 63) {
+            return "D";
+        } else if (grade >= 60) {
+            return "D-";
+        } else {
+            return "F";
         }
     }
 }

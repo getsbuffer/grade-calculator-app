@@ -15,7 +15,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.gradecalculatorapp.Adapter.CourseAdapter;
+import com.gradecalculatorapp.adapter.CourseAdapter;
 import com.gradecalculatorapp.model.Course;
 import com.gradecalculatorapp.viewmodel.CourseViewModel;
 
@@ -65,7 +65,7 @@ public class NavHomeFragment extends Fragment {
             if (!courseNameInput.isEmpty() && !creditHoursInput.isEmpty()) {
                 try {
                     int creditHoursValue = Integer.parseInt(creditHoursInput);
-                    Course course = new Course(courseNameInput, creditHoursValue, 0.0);
+                    Course course = new Course(courseNameInput, "Null", creditHoursValue, 0.0);
                     courseViewModel.addCourse(courseNameInput, course);
                     navigateToAddGradeFragment(courseNameInput, creditHoursValue);
                 } catch (NumberFormatException e) {
@@ -105,44 +105,59 @@ public class NavHomeFragment extends Fragment {
 
     private void updateGPA() {
         Map<String, Course> courses = courseViewModel.getCourses().getValue();
+        String letterGrade;
         if (courses == null) return;
 
         totalGradePoints = 0.0;
         totalCreditHours = 0;
 
         for (Course course : courses.values()) {
-            double finalGrade = course.getFinalGrade();
+            letterGrade = course.calculateLetterGrade(course.getFinalGrade());
             double gradePoints;
 
-            if (finalGrade >= 93) {
-                gradePoints = 4.0;
-            } else if (finalGrade >= 90) {
-                gradePoints = 3.75;
-            } else if (finalGrade >= 87) {
-                gradePoints = 3.25;
-            } else if (finalGrade >= 83) {
-                gradePoints = 3.0;
-            } else if (finalGrade >= 80) {
-                gradePoints = 2.75;
-            } else if (finalGrade >= 77) {
-                gradePoints = 2.25;
-            } else if (finalGrade >= 73) {
-                gradePoints = 2.0;
-            } else if (finalGrade >= 70) {
-                gradePoints = 1.75;
-            } else if (finalGrade >= 67) {
-                gradePoints = 1.25;
-            } else if (finalGrade >= 63) {
-                gradePoints = 1.0;
-            } else if (finalGrade >= 60) {
-                gradePoints = 0.75;
-            } else {
-                gradePoints = 0.0;
+            switch (letterGrade) {
+                case "A":
+                    gradePoints = 4.0;
+                    break;
+                case "A-":
+                    gradePoints = 3.75;
+                    break;
+                case "B+":
+                    gradePoints = 3.25;
+                    break;
+                case "B":
+                    gradePoints = 3.0;
+                    break;
+                case "B-":
+                    gradePoints = 2.75;
+                    break;
+                case "C+":
+                    gradePoints = 2.25;
+                    break;
+                case "C":
+                    gradePoints = 2.0;
+                    break;
+                case "C-":
+                    gradePoints = 1.75;
+                    break;
+                case "D+":
+                    gradePoints = 1.25;
+                    break;
+                case "D":
+                    gradePoints = 1.0;
+                    break;
+                case "D-":
+                    gradePoints = 0.75;
+                    break;
+                default:
+                    gradePoints = 0.0;
+                    break;
             }
 
             totalCreditHours += course.getCreditHours();
             totalGradePoints += gradePoints * course.getCreditHours();
         }
+
         if (totalCreditHours != 0) {
             double totalGPA = totalGradePoints / totalCreditHours;
             totalGPA = roundToTwoDecimalPlaces(totalGPA);

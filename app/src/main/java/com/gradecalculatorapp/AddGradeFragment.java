@@ -14,7 +14,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.gradecalculatorapp.Adapter.GradesAdapter;
+import com.gradecalculatorapp.adapter.GradesAdapter;
 import com.gradecalculatorapp.model.Course;
 import com.gradecalculatorapp.model.GradeDetail;
 import com.gradecalculatorapp.viewmodel.CourseViewModel;
@@ -45,10 +45,13 @@ public class AddGradeFragment extends Fragment {
         EditText categoryName = view.findViewById(R.id.category_name);
         EditText numericalGrade = view.findViewById(R.id.grade);
         EditText weight = view.findViewById(R.id.weight);
+        TextView letterGradeText = view.findViewById(R.id.letter_grade);
         Button addGradeButton = view.findViewById(R.id.add_grade_button);
         TextView totalWeightedGradeText = view.findViewById(R.id.total_weighted_grade);
         Button doneButton = view.findViewById(R.id.done_button);
         gradesRecyclerView = view.findViewById(R.id.grades_recycler_view);
+
+
 
         courseViewModel = new ViewModelProvider(requireActivity()).get(CourseViewModel.class);
 
@@ -65,6 +68,7 @@ public class AddGradeFragment extends Fragment {
             if (course != null) {
                 totalWeightedGrade = course.getFinalGrade();
                 totalWeightedGradeText.setText(String.format("Total Weighted Grade: %.2f", totalWeightedGrade));
+                letterGradeText.setText(String.format("Letter Grade: %s", course.calculateLetterGrade(totalWeightedGrade)));
 
                 for (Map.Entry<String, GradeDetail> entry : course.getGrades().entrySet()) {
                     String category = entry.getKey();
@@ -98,13 +102,14 @@ public class AddGradeFragment extends Fragment {
 
                     Course course = courseViewModel.getCourses().getValue().get(courseName);
                     if (course == null) {
-                        course = new Course(courseName, creditHours, totalWeightedGrade);
+                        course = new Course(courseName, "Null", creditHours, totalWeightedGrade);
                         course.addGrade(categoryNameInput, gradeValue, weightValue);
                         courseViewModel.addCourse(courseName, course);
                     } else {
                         course.addGrade(categoryNameInput, gradeValue, weightValue);
                         courseViewModel.updateCourse(course);
                     }
+                    letterGradeText.setText(String.format("Letter Grade: %s", course.calculateLetterGrade(totalWeightedGrade)));
                 } catch (NumberFormatException e) {
                     Toast.makeText(getActivity(), "Please enter valid numbers for grade and weight", Toast.LENGTH_SHORT).show();
                 }
@@ -132,13 +137,14 @@ public class AddGradeFragment extends Fragment {
         gradesAdapter.notifyDataSetChanged();
 
         TextView totalWeightedGradeText = getView().findViewById(R.id.total_weighted_grade);
+        TextView letterGradeText = getView().findViewById(R.id.letter_grade);
         totalWeightedGradeText.setText(String.format("Total Weighted Grade: %.2f", totalWeightedGrade));
-
         Course course = courseViewModel.getCourses().getValue().get(courseName);
         if (course != null) {
             course.deleteGrade(gradeItem.getCategoryName());
             courseViewModel.updateCourse(course);
         }
+        letterGradeText.setText(String.format("Letter Grade: %s", course.calculateLetterGrade(totalWeightedGrade)));
     }
 
     private double roundToTwoDecimalPlaces(double value) {

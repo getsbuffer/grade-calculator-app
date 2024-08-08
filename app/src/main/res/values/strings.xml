@@ -23,4 +23,5 @@
     <string name="grade_item">Grade Item</string>
     <string name="delete_grade">Delete</string>
     <string name="all_grades">All Grades:</string>
+    <string name="letter_grade">Letter Grade:</string>
 </resources>

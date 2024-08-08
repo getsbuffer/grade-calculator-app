@@ -1,4 +1,4 @@
-package com.gradecalculatorapp.Adapter;
+package com.gradecalculatorapp.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,7 +36,8 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
     @Override
     public void onBindViewHolder(@NonNull CourseViewHolder holder, int position) {
         Course course = courseList.get(position);
-        holder.courseItemText.setText(course.getName() + " - " + course.getFinalGrade() + " (" + course.getCreditHours() + " credit hours)");
+        String letterGrade = course.calculateLetterGrade(course.getFinalGrade());
+        holder.courseItemText.setText(course.getName() + " - " + course.getFinalGrade() + " (" + letterGrade + ") (" + course.getCreditHours() + " credit hours)");
         holder.editButton.setOnClickListener(v -> editButtonClickListener.onEditButtonClick(course));
     }
 
