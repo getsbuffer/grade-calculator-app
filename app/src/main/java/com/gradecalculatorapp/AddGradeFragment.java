@@ -150,7 +150,8 @@ public class AddGradeFragment extends Fragment {
     private void updateTotalGradeText(TextView totalWeightedGradeText, TextView letterGradeText) {
         double scaledGrade = totalWeight > 0 ? (totalWeightedGrade / totalWeight) * 100 : 0.0;
         totalWeightedGradeText.setText(String.format("Total Weighted Grade: %.2f", scaledGrade));
-        letterGradeText.setText(String.format("Letter Grade: %s", calculateLetterGrade(scaledGrade)));
+        Course course = courseViewModel.getCourses().getValue().get(courseName);
+        letterGradeText.setText(String.format("Letter Grade: %s", course.calculateLetterGrade(scaledGrade)));
     }
 
     private double calculateTotalWeight(Course course) {
@@ -164,35 +165,6 @@ public class AddGradeFragment extends Fragment {
     private double roundToTwoDecimalPlaces(double value) {
         return Math.round(value * 100.0) / 100.0;
     }
-
-    private String calculateLetterGrade(double grade) {
-        if (grade >= 93) {
-            return "A";
-        } else if (grade >= 90) {
-            return "A-";
-        } else if (grade >= 87) {
-            return "B+";
-        } else if (grade >= 83) {
-            return "B";
-        } else if (grade >= 80) {
-            return "B-";
-        } else if (grade >= 77) {
-            return "C+";
-        } else if (grade >= 73) {
-            return "C";
-        } else if (grade >= 70) {
-            return "C-";
-        } else if (grade >= 67) {
-            return "D+";
-        } else if (grade >= 63) {
-            return "D";
-        } else if (grade >= 60) {
-            return "D-";
-        } else {
-            return "F";
-        }
-    }
-
     public static class GradeItem {
         private String categoryName;
         private double grade;
