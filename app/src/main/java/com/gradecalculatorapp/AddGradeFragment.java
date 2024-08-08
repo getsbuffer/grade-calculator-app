@@ -27,6 +27,7 @@ public class AddGradeFragment extends Fragment {
 
     private static final String TAG = "AddGradeFragment";
     private double totalWeightedGrade = 0.0;
+    private double totalWeight = 0.0;
     private CourseViewModel courseViewModel;
     private String courseName;
     private int creditHours;
@@ -51,8 +52,6 @@ public class AddGradeFragment extends Fragment {
         Button doneButton = view.findViewById(R.id.done_button);
         gradesRecyclerView = view.findViewById(R.id.grades_recycler_view);
 
-
-
         courseViewModel = new ViewModelProvider(requireActivity()).get(CourseViewModel.class);
 
         gradesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -67,8 +66,8 @@ public class AddGradeFragment extends Fragment {
             Course course = courseViewModel.getCourses().getValue().get(courseName);
             if (course != null) {
                 totalWeightedGrade = course.getFinalGrade();
-                totalWeightedGradeText.setText(String.format("Total Weighted Grade: %.2f", totalWeightedGrade));
-                letterGradeText.setText(String.format("Letter Grade: %s", course.calculateLetterGrade(totalWeightedGrade)));
+                totalWeight = calculateTotalWeight(course);
+                updateTotalGradeText(totalWeightedGradeText, letterGradeText);
 
                 for (Map.Entry<String, GradeDetail> entry : course.getGrades().entrySet()) {
                     String category = entry.getKey();
@@ -98,7 +97,8 @@ public class AddGradeFragment extends Fragment {
                     weight.setText("");
 
                     totalWeightedGrade += gradeValue * (weightValue / 100);
-                    totalWeightedGradeText.setText(String.format("Total Weighted Grade: %.2f", totalWeightedGrade));
+                    totalWeight += weightValue;
+                    updateTotalGradeText(totalWeightedGradeText, letterGradeText);
 
                     Course course = courseViewModel.getCourses().getValue().get(courseName);
                     if (course == null) {
@@ -109,7 +109,6 @@ public class AddGradeFragment extends Fragment {
                         course.addGrade(categoryNameInput, gradeValue, weightValue);
                         courseViewModel.updateCourse(course);
                     }
-                    letterGradeText.setText(String.format("Letter Grade: %s", course.calculateLetterGrade(totalWeightedGrade)));
                 } catch (NumberFormatException e) {
                     Toast.makeText(getActivity(), "Please enter valid numbers for grade and weight", Toast.LENGTH_SHORT).show();
                 }
@@ -133,22 +132,65 @@ public class AddGradeFragment extends Fragment {
 
     private void removeGrade(GradeItem gradeItem) {
         totalWeightedGrade -= gradeItem.getGrade() * (gradeItem.getWeight() / 100);
+        totalWeight -= gradeItem.getWeight();
         gradeItems.remove(gradeItem);
         gradesAdapter.notifyDataSetChanged();
 
         TextView totalWeightedGradeText = getView().findViewById(R.id.total_weighted_grade);
         TextView letterGradeText = getView().findViewById(R.id.letter_grade);
-        totalWeightedGradeText.setText(String.format("Total Weighted Grade: %.2f", totalWeightedGrade));
+        updateTotalGradeText(totalWeightedGradeText, letterGradeText);
+
         Course course = courseViewModel.getCourses().getValue().get(courseName);
         if (course != null) {
             course.deleteGrade(gradeItem.getCategoryName());
             courseViewModel.updateCourse(course);
         }
-        letterGradeText.setText(String.format("Letter Grade: %s", course.calculateLetterGrade(totalWeightedGrade)));
+    }
+
+    private void updateTotalGradeText(TextView totalWeightedGradeText, TextView letterGradeText) {
+        double scaledGrade = totalWeight > 0 ? (totalWeightedGrade / totalWeight) * 100 : 0.0;
+        totalWeightedGradeText.setText(String.format("Total Weighted Grade: %.2f", scaledGrade));
+        letterGradeText.setText(String.format("Letter Grade: %s", calculateLetterGrade(scaledGrade)));
+    }
+
+    private double calculateTotalWeight(Course course) {
+        double weight = 0.0;
+        for (GradeDetail detail : course.getGrades().values()) {
+            weight += detail.getWeight();
+        }
+        return weight;
     }
 
     private double roundToTwoDecimalPlaces(double value) {
         return Math.round(value * 100.0) / 100.0;
+    }
+
+    private String calculateLetterGrade(double grade) {
+        if (grade >= 93) {
+            return "A";
+        } else if (grade >= 90) {
+            return "A-";
+        } else if (grade >= 87) {
+            return "B+";
+        } else if (grade >= 83) {
+            return "B";
+        } else if (grade >= 80) {
+            return "B-";
+        } else if (grade >= 77) {
+            return "C+";
+        } else if (grade >= 73) {
+            return "C";
+        } else if (grade >= 70) {
+            return "C-";
+        } else if (grade >= 67) {
+            return "D+";
+        } else if (grade >= 63) {
+            return "D";
+        } else if (grade >= 60) {
+            return "D-";
+        } else {
+            return "F";
+        }
     }
 
     public static class GradeItem {
