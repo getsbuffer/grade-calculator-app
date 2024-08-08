@@ -24,4 +24,9 @@
     <string name="delete_grade">Delete</string>
     <string name="all_grades">All Grades:</string>
     <string name="letter_grade">Letter Grade:</string>
+    <string name="settings">Settings</string>
+    <string name="base_gpa_and_credit_hours">Base GPA and Credit Hours</string>
+    <string name="enter_base_gpa">Enter base GPA</string>
+    <string name="enter_base_credit_hours">Enter base credit hours</string>
+    <string name="apply">Apply</string>
 </resources>

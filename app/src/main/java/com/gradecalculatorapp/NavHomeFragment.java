@@ -14,6 +14,9 @@ import android.widget.Toast;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import android.app.AlertDialog;
+import android.content.SharedPreferences;
+import android.content.Context;
 
 import com.gradecalculatorapp.adapter.CourseAdapter;
 import com.gradecalculatorapp.model.Course;
@@ -28,11 +31,12 @@ public class NavHomeFragment extends Fragment {
     private double totalGradePoints = 0.0;
     private int totalCreditHours = 0;
     private RecyclerView courseRecyclerView;
-
     private TextView totalGPAText;
     private CourseViewModel courseViewModel;
     private CourseAdapter courseAdapter;
     private List<Course> courseList = new ArrayList<>();
+    private double baseGPA = 0.0;
+    private int baseCreditHours = 0;
 
     public NavHomeFragment() {
         super(R.layout.fragment_home);
@@ -46,18 +50,16 @@ public class NavHomeFragment extends Fragment {
         EditText creditHours = view.findViewById(R.id.credit_hours);
         Button addCourseButton = view.findViewById(R.id.add_course_button);
         Button deleteCourseButton = view.findViewById(R.id.delete_course_button);
+        Button settingsButton = view.findViewById(R.id.settings_button);
         courseRecyclerView = view.findViewById(R.id.course_recycler_view);
         totalGPAText = view.findViewById(R.id.total_gpa);
 
-        // Initialize ViewModel
         courseViewModel = new ViewModelProvider(requireActivity()).get(CourseViewModel.class);
 
-        // Setup RecyclerView
         courseRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         courseAdapter = new CourseAdapter(courseList, course -> navigateToAddGradeFragment(course.getName(), course.getCreditHours()));
         courseRecyclerView.setAdapter(courseAdapter);
 
-        // Add course button listener
         addCourseButton.setOnClickListener(v -> {
             String courseNameInput = courseName.getText().toString();
             String creditHoursInput = creditHours.getText().toString();
@@ -76,16 +78,18 @@ public class NavHomeFragment extends Fragment {
             }
         });
 
-        // Delete course button listener
         deleteCourseButton.setOnClickListener(v -> Navigation.findNavController(view).navigate(R.id.navigation_deleteFragment));
 
-        // Observe changes in course list
+        settingsButton.setOnClickListener(v -> showBaseGPASettingsDialog());
+
         courseViewModel.getCourses().observe(getViewLifecycleOwner(), courses -> {
             courseName.setText("");
             creditHours.setText("");
             updateCourseList(courses);
             updateGPA();
         });
+
+        loadBaseGPAAndCreditHours();
 
         return view;
     }
@@ -108,8 +112,8 @@ public class NavHomeFragment extends Fragment {
         String letterGrade;
         if (courses == null) return;
 
-        totalGradePoints = 0.0;
-        totalCreditHours = 0;
+        totalGradePoints = baseGPA * baseCreditHours;
+        totalCreditHours = baseCreditHours;
 
         for (Course course : courses.values()) {
             letterGrade = course.calculateLetterGrade(course.getFinalGrade());
@@ -165,6 +169,44 @@ public class NavHomeFragment extends Fragment {
         } else {
             totalGPAText.setText("Total GPA: 0.00");
         }
+    }
+
+    private void loadBaseGPAAndCreditHours() {
+        SharedPreferences prefs = getActivity().getPreferences(Context.MODE_PRIVATE);
+        baseGPA = prefs.getFloat("baseGPA", 0.0f);
+        baseCreditHours = prefs.getInt("baseCreditHours", 0);
+    }
+
+    private void saveBaseGPAAndCreditHours() {
+        SharedPreferences.Editor editor = getActivity().getPreferences(Context.MODE_PRIVATE).edit();
+        editor.putFloat("baseGPA", (float) baseGPA);
+        editor.putInt("baseCreditHours", baseCreditHours);
+        editor.apply();
+    }
+
+    private void showBaseGPASettingsDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_base_gpa_credit_hours, null);
+        builder.setView(dialogView);
+
+        EditText baseGPAInput = dialogView.findViewById(R.id.base_gpa);
+        EditText baseCreditHoursInput = dialogView.findViewById(R.id.base_credit_hours);
+        Button applyButton = dialogView.findViewById(R.id.apply_button);
+        AlertDialog dialog = builder.create();
+
+        applyButton.setOnClickListener(v -> {
+            try {
+                baseGPA = Double.parseDouble(baseGPAInput.getText().toString().trim());
+                baseCreditHours = Integer.parseInt(baseCreditHoursInput.getText().toString().trim());
+                saveBaseGPAAndCreditHours();
+                updateGPA();
+                dialog.dismiss();
+            } catch (NumberFormatException e) {
+                Toast.makeText(getContext(), "Please enter valid values for GPA and credit hours", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        dialog.show();
     }
 
     private double roundToTwoDecimalPlaces(double value) {
